@@ -92,7 +92,14 @@ public class Philosopher extends BaseThread
 			 */
 			if(Math.random() < 0.5) // A random decison 
 			{
-				DiningPhilosophers.soMonitor.requestTalk();
+				try {
+					DiningPhilosophers.soMonitor.requestTalk(getTID());
+				} catch (InterruptedException e) {
+					System.err.println("Monitor.requestTalk():");
+					e.printStackTrace();
+					System.exit(1);
+
+				}
 				talk();
 				DiningPhilosophers.soMonitor.endTalk();
 

@@ -1,0 +1,12 @@
+Preventing Starvation
+
+The implementation handles starvation in the Dining Philosophers problem by using a first-come, first-served queuing mechanism. 
+Each philosopher, upon deciding to eat, is added to a queue (pickUpQueue). 
+Philosophers can only pick up chopsticks (to eat) when they are at the front of this queue and both their required chopsticks are available. 
+This queue ensures that every philosopher gets a fair chance to eat in the order they requested to do so, 
+thereby preventing any philosopher from being indefinitely starved of resources.
+
+Additionally, when a philosopher finishes eating and puts down the chopsticks (putDown method), notifyAll() is invoked to wake up all waiting philosophers. 
+This action allows the next philosopher in the queue to have an opportunity to eat. 
+By systematically managing access to chopsticks in this orderly fashion, the implementation guarantees that all philosophers will eventually be able to eat, 
+thus effectively avoiding the problem of starvation.

@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 /** 
  * Class Monitor 
  * To synchronize dining philosophers. 
@@ -7,6 +10,11 @@
 public class Monitor   
 {
 	private boolean[] chopsticks;
+    private boolean isTalking = false;
+    private Queue<Integer> talkQueue = new LinkedList<>();
+    private Queue<Integer> pickUpQueue = new LinkedList<>();
+
+	
 	/*
 	 * ------------    
 	 * Data members 
@@ -44,7 +52,9 @@ public class Monitor
 		int leftChopstick = piTID;
 		int rightChopstick = (piTID + 1) % chopsticks.length;
 		
-		while(!(chopsticks[leftChopstick] && chopsticks[rightChopstick])) {
+		pickUpQueue.add(piTID);
+		
+		while(!(chopsticks[leftChopstick] && chopsticks[rightChopstick]) && pickUpQueue.peek() != piTID) {
 			try {
 				wait();
 			} catch (InterruptedException  e) {
@@ -55,6 +65,7 @@ public class Monitor
 		} 
 			chopsticks[leftChopstick] = false;
 			chopsticks[rightChopstick] = false;
+			pickUpQueue.remove();
 	}
 
 	/**
@@ -74,10 +85,19 @@ public class Monitor
 	/**
 	 * Only one philopher at a time is allowed to philosophy
 	 * (while she is not eating).
+	 * @throws InterruptedException 
 	 */
-	public synchronized void requestTalk()
+	public synchronized void requestTalk(int piTID) throws InterruptedException
 	{
-		// ...
+		talkQueue.add(piTID);
+		
+		while (isTalking || talkQueue.peek() != piTID) {
+			wait();
+		}
+		
+		isTalking = true;
+		talkQueue.remove();
+
 	}
 
 	/**
@@ -86,7 +106,8 @@ public class Monitor
 	 */
 	public synchronized void endTalk()
 	{
-		// ...
+		isTalking = false;
+		notifyAll();
 	}
 }
 
