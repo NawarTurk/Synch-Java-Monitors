@@ -48,6 +48,21 @@ public class DiningPhilosophers
 			 */
 			int iPhilosophers = DEFAULT_NUMBER_OF_PHILOSOPHERS;
 
+			if (argv.length > 0) {
+				try 
+				{
+					iPhilosophers = Integer.parseInt(argv[0]);
+					if (iPhilosophers <= 0) {
+						throw new NumberFormatException("The Number of Philosipher Must Be a Positive Integer");
+					}		
+				} catch(NumberFormatException e)
+				{
+					System.err.println(e.getMessage());
+					System.exit(1);
+				}
+		
+			}
+
 			// Make the monitor aware of how many philosophers there are
 			soMonitor = new Monitor(iPhilosophers);
 
