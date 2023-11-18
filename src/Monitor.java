@@ -6,6 +6,7 @@
  */
 public class Monitor   
 {
+	private boolean[] chopsticks;
 	/*
 	 * ------------    
 	 * Data members 
@@ -19,6 +20,13 @@ public class Monitor
 	public Monitor(int piNumberOfPhilosophers)
 	{
 		// TODO: set appropriate number of chopsticks based on the # of philosophers
+
+		chopsticks = new boolean[piNumberOfPhilosophers];
+		
+		for (int i = 0; i < chopsticks.length; i++) {
+			chopsticks[i] = true;
+		}
+		
 	}
 
 	/*
@@ -33,7 +41,20 @@ public class Monitor
 	 */
 	public synchronized void pickUp(final int piTID)
 	{
-		// ...
+		int leftChopstick = piTID;
+		int rightChopstick = (piTID + 1) % chopsticks.length;
+		
+		while(!(chopsticks[leftChopstick] && chopsticks[rightChopstick])) {
+			try {
+				wait();
+			} catch (InterruptedException  e) {
+				System.err.println("Philosopher.pickUp():");
+				DiningPhilosophers.reportException(e);
+				System.exit(1);
+			}
+		} 
+			chopsticks[leftChopstick] = false;
+			chopsticks[rightChopstick] = false;
 	}
 
 	/**
@@ -42,7 +63,12 @@ public class Monitor
 	 */
 	public synchronized void putDown(final int piTID)
 	{
-		// ...
+		int leftChopstick = piTID;
+		int rightChopstick = (piTID + 1) % chopsticks.length;
+		
+		chopsticks[leftChopstick] = true;
+		chopsticks[rightChopstick] = true;	
+		notifyAll();
 	}
 
 	/**
