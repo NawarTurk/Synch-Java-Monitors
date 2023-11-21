@@ -54,7 +54,7 @@ public class Monitor
 		
 		pickUpQueue.add(piTID);
 		
-		while(!(chopsticks[leftChopstick] && chopsticks[rightChopstick]) && pickUpQueue.peek() != piTID) {
+		while(!(chopsticks[leftChopstick] && chopsticks[rightChopstick]) || pickUpQueue.peek() != piTID) {
 			try {
 				wait();
 			} catch (InterruptedException  e) {
